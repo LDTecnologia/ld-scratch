@@ -58,21 +58,23 @@ const pinMicrobitHex = () => {
     fs.writeFileSync(generatedFile, body);
 };
 
-const registerArduinoUno = () => {
+const keepPenAndMakeyMakey = () => {
     const manager = path.join(root, 'node_modules', 'scratch-vm', 'src', 'extension-support', 'extension-manager.js');
     if (!fs.existsSync(manager)) return;
     const text = fs.readFileSync(manager, 'utf8');
-    if (text.includes('arduinoUno:')) return;
-    const needle = "    gdxfor: () => require('../extensions/scratch3_gdx_for')\n};";
-    if (!text.includes(needle)) {
-        throw new Error('Não foi possível registrar a extensão Arduino Uno.');
+    const start = text.indexOf('const builtinExtensions = {');
+    const end = text.indexOf('\n};', start);
+    if (start === -1 || end === -1) {
+        throw new Error('Não foi possível limitar as extensões embutidas.');
     }
-    fs.writeFileSync(manager, text.replace(
-        needle,
-        "    gdxfor: () => require('../extensions/scratch3_gdx_for'),\n    arduinoUno: () => require('../extensions/scratch3_arduino_uno')\n};"
-    ));
+    const replacement = `const builtinExtensions = {
+    pen: () => require('../extensions/scratch3_pen'),
+    makeymakey: () => require('../extensions/scratch3_makeymakey')
+};`;
+    const next = `${text.slice(0, start)}${replacement}${text.slice(end + 3)}`;
+    if (next !== text) fs.writeFileSync(manager, next);
 };
 
 restoreBundledExtensions();
-registerArduinoUno();
+keepPenAndMakeyMakey();
 pinMicrobitHex();
