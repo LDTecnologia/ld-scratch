@@ -2,6 +2,7 @@ import bindAll from 'lodash.bindall';
 import debounce from 'lodash.debounce';
 import defaultsDeep from 'lodash.defaultsdeep';
 import makeToolboxXML from '../lib/make-toolbox-xml';
+import {isArduinoDevice} from '../lib/arduino-device';
 import PropTypes from 'prop-types';
 import React from 'react';
 import VMScratchBlocks from '../lib/blocks';
@@ -246,6 +247,21 @@ class Blocks extends React.Component {
         const queue = this.toolboxUpdateQueue;
         this.toolboxUpdateQueue = [];
         queue.forEach(fn => fn());
+
+        const editing = this.props.vm.editingTarget;
+        const toolbox = this.workspace.toolbox_;
+        const pick = id => (toolbox.categoryMenu_ && toolbox.categoryMenu_.categories_ || [])
+            .find(category => category.id_ === id);
+        if (isArduinoDevice(editing)) {
+            const category = pick('arduinoUno');
+            if (category) toolbox.setSelectedItem(category);
+        } else if (editing && editing.isStage && (categoryId === 'motion' || categoryId === 'arduinoUno')) {
+            const category = pick('looks');
+            if (category) toolbox.setSelectedItem(category);
+        } else if (categoryId === 'arduinoUno') {
+            const category = pick('motion');
+            if (category) toolbox.setSelectedItem(category);
+        }
     }
 
     withToolboxUpdates (fn) {
@@ -355,15 +371,17 @@ class Blocks extends React.Component {
             const stageCostumes = stage.getCostumes();
             const targetCostumes = target.getCostumes();
             const targetSounds = target.getSounds();
+            const isDevice = isArduinoDevice(target);
             const dynamicBlocksXML = injectExtensionCategoryTheme(
                 this.props.vm.runtime.getBlocksXML(target),
                 this.props.theme
-            );
-            return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
+            ).filter(category => isDevice || category.id !== 'arduinoUno');
+            return makeToolboxXML(false, isDevice ? false : target.isStage, target.id, dynamicBlocksXML,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
                 targetSounds.length > 0 ? targetSounds[targetSounds.length - 1].name : '',
-                getColorsForTheme(this.props.theme)
+                getColorsForTheme(this.props.theme),
+                isDevice
             );
         } catch {
             return null;

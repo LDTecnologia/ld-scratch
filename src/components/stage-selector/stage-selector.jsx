@@ -5,6 +5,7 @@ import {defineMessages, intlShape, injectIntl, FormattedMessage} from 'react-int
 
 import Box from '../box/box.jsx';
 import ActionMenu from '../action-menu/action-menu.jsx';
+import DeleteButton from '../delete-button/delete-button.jsx';
 import styles from './stage-selector.css';
 import {isRtl} from 'scratch-l10n';
 
@@ -46,6 +47,11 @@ const StageSelector = props => {
         intl,
         selected,
         raised,
+        tile,
+        costumes,
+        currentCostume,
+        onSelectCostume,
+        onDeleteCostume,
         receivedBlocks,
         url,
         onBackdropFileUploadClick,
@@ -58,12 +64,19 @@ const StageSelector = props => {
         onEmptyBackdropClick,
         ...componentProps
     } = props;
+    const tiles = Array.isArray(costumes) ? costumes.map((costume, index) => ({
+        index: index,
+        name: costume.name,
+        url: costume.asset && typeof costume.asset.encodeDataURI === 'function' ?
+            costume.asset.encodeDataURI() : ''
+    })) : [];
     return (
         <Box
             className={classNames(styles.stageSelector, {
                 [styles.isSelected]: selected,
                 [styles.raised]: raised || dragOver,
-                [styles.receivedBlocks]: receivedBlocks
+                [styles.receivedBlocks]: receivedBlocks,
+                [styles.tile]: tile
             })}
             componentRef={containerRef}
             onClick={onClick}
@@ -71,29 +84,69 @@ const StageSelector = props => {
             onMouseLeave={onMouseLeave}
             {...componentProps}
         >
-            <div className={styles.header}>
-                <div className={styles.headerTitle}>
-                    <FormattedMessage
-                        defaultMessage="Stage"
-                        description="Label for the stage in the stage selector"
-                        id="gui.stageSelector.stage"
-                    />
+            {tile ? (
+                <div className={styles.backdropGrid}>
+                    {tiles.map(item => (
+                        <div
+                            key={item.index}
+                            className={classNames(styles.backdropCard, {
+                                [styles.backdropOn]: item.index === currentCostume
+                            })}
+                            role="button"
+                            tabIndex={0}
+                            onClick={event => onSelectCostume(item.index, event)}
+                            onKeyDown={event => {
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    onSelectCostume(item.index, event);
+                                }
+                            }}
+                        >
+                            {item.url ? (
+                                <img
+                                    alt=""
+                                    className={styles.backdropThumb}
+                                    draggable={false}
+                                    src={item.url}
+                                />
+                            ) : null}
+                            <span className={styles.backdropName}>{item.name}</span>
+                            {tiles.length > 1 && onDeleteCostume ? (
+                                <DeleteButton
+                                    className={styles.backdropDelete}
+                                    onClick={event => onDeleteCostume(item.index, event)}
+                                />
+                            ) : null}
+                        </div>
+                    ))}
                 </div>
-            </div>
-            {url ? (
-                <img
-                    className={styles.costumeCanvas}
-                    src={url}
-                />
-            ) : null}
-            <div className={styles.label}>
-                <FormattedMessage
-                    defaultMessage="Backdrops"
-                    description="Label for the backdrops in the stage selector"
-                    id="gui.stageSelector.backdrops"
-                />
-            </div>
-            <div className={styles.count}>{backdropCount}</div>
+            ) : (
+                <React.Fragment>
+                    <div className={styles.header}>
+                        <div className={styles.headerTitle}>
+                            <FormattedMessage
+                                defaultMessage="Stage"
+                                description="Label for the stage in the stage selector"
+                                id="gui.stageSelector.stage"
+                            />
+                        </div>
+                    </div>
+                    {url ? (
+                        <img
+                            className={styles.costumeCanvas}
+                            src={url}
+                        />
+                    ) : null}
+                    <div className={styles.label}>
+                        <FormattedMessage
+                            defaultMessage="Backdrops"
+                            description="Label for the backdrops in the stage selector"
+                            id="gui.stageSelector.backdrops"
+                        />
+                    </div>
+                    <div className={styles.count}>{backdropCount}</div>
+                </React.Fragment>
+            )}
             <ActionMenu
                 className={styles.addButton}
                 img={backdropIcon}
@@ -132,12 +185,18 @@ const StageSelector = props => {
 StageSelector.propTypes = {
     backdropCount: PropTypes.number.isRequired,
     containerRef: PropTypes.func,
+    costumes: PropTypes.arrayOf(PropTypes.shape({
+        asset: PropTypes.object,
+        name: PropTypes.string
+    })),
+    currentCostume: PropTypes.number,
     dragOver: PropTypes.bool,
     fileInputRef: PropTypes.func,
     intl: intlShape.isRequired,
     onBackdropFileUpload: PropTypes.func,
     onBackdropFileUploadClick: PropTypes.func,
     onClick: PropTypes.func,
+    onDeleteCostume: PropTypes.func,
     onEmptyBackdropClick: PropTypes.func,
     onMouseEnter: PropTypes.func,
     onMouseLeave: PropTypes.func,
@@ -146,7 +205,9 @@ StageSelector.propTypes = {
     raised: PropTypes.bool.isRequired,
     receivedBlocks: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
-    url: PropTypes.string
+    tile: PropTypes.bool,
+    url: PropTypes.string,
+    onSelectCostume: PropTypes.func
 };
 
 export default injectIntl(StageSelector);

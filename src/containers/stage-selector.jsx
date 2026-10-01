@@ -9,6 +9,7 @@ import {openBackdropLibrary} from '../reducers/modals';
 import {activateTab, COSTUMES_TAB_INDEX} from '../reducers/editor-tab';
 import {showStandardAlert, closeAlertWithId} from '../reducers/alerts';
 import {setHoveredSprite} from '../reducers/hovered-target';
+import {setRestore} from '../reducers/restore-deletion';
 import DragConstants from '../lib/drag-constants';
 import DropAreaHOC from '../lib/drop-area-hoc.jsx';
 import ThrottledPropertyHOC from '../lib/throttled-property-hoc.jsx';
@@ -42,6 +43,8 @@ class StageSelector extends React.Component {
             'handleNewBackdrop',
             'handleSurpriseBackdrop',
             'handleEmptyBackdrop',
+            'handleSelectCostume',
+            'handleDeleteCostume',
             'addBackdropFromLibraryItem',
             'handleFileUploadClick',
             'handleBackdropUpload',
@@ -95,6 +98,22 @@ class StageSelector extends React.Component {
         // @todo should this not add a backdrop you already have?
         const item = backdropLibraryContent[Math.floor(Math.random() * backdropLibraryContent.length)];
         this.addBackdropFromLibraryItem(item, false);
+    }
+    handleSelectCostume (index, event) {
+        if (event) event.stopPropagation();
+        const target = this.props.vm.runtime.getTargetById(this.props.id);
+        if (target) target.setCostume(index);
+    }
+    handleDeleteCostume (index, event) {
+        if (event) event.stopPropagation();
+        const target = this.props.vm.runtime.getTargetById(this.props.id);
+        if (!target || target.sprite.costumes.length < 2) return;
+        this.props.vm.setEditingTarget(this.props.id);
+        const restoreCostumeFun = this.props.vm.deleteCostume(index);
+        this.props.dispatchUpdateRestore({
+            restoreFun: restoreCostumeFun,
+            deletedItem: 'Costume'
+        });
     }
     handleEmptyBackdrop (e) {
         e.stopPropagation(); // Prevent click from falling through to stage selector, select it manually below
@@ -171,6 +190,8 @@ class StageSelector extends React.Component {
                 onEmptyBackdropClick={this.handleEmptyBackdrop}
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
+                onDeleteCostume={this.handleDeleteCostume}
+                onSelectCostume={this.handleSelectCostume}
                 onSurpriseBackdropClick={this.handleSurpriseBackdrop}
                 {...componentProps}
             />
@@ -206,7 +227,10 @@ const mapDispatchToProps = dispatch => ({
         dispatch(setHoveredSprite(spriteId));
     },
     onCloseImporting: () => dispatch(closeAlertWithId('importingAsset')),
-    onShowImporting: () => dispatch(showStandardAlert('importingAsset'))
+    onShowImporting: () => dispatch(showStandardAlert('importingAsset')),
+    dispatchUpdateRestore: restoreState => {
+        dispatch(setRestore(restoreState));
+    }
 });
 
 export default injectIntl(connect(

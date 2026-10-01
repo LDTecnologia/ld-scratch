@@ -1,0 +1,268 @@
+.pane {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    background: white;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    color: hsla(225, 15%, 45%, 1);
+}
+
+.tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    background: hsla(215, 100%, 97%, 1);
+}
+
+.tab-on,
+.tab-off {
+    border: 0;
+    border-radius: 8px 8px 0 0;
+    padding: 5px 12px 4px;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.tab-on {
+    color: hsla(215, 100%, 55%, 1);
+    background: white;
+    box-shadow: inset 0 -2px 0 hsla(215, 100%, 65%, 1);
+}
+
+.tab-off {
+    color: hsla(215, 40%, 62%, 1);
+    background: hsla(215, 80%, 94%, 1);
+}
+
+.body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    background: white;
+}
+
+.devices {
+    width: 86px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border-right: 1px solid hsla(215, 60%, 92%, 1);
+    overflow: auto;
+}
+
+.device-card,
+.add-card {
+    width: 100%;
+    border: 1px solid hsla(215, 80%, 86%, 1);
+    border-radius: 8px;
+    background: hsla(215, 100%, 97%, 1);
+    color: hsla(215, 80%, 45%, 1);
+}
+
+.device-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 4px 6px;
+    border-color: hsla(215, 90%, 72%, 1);
+    background: white;
+    box-shadow: none;
+}
+
+.device-image {
+    width: 36px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.device-name {
+    margin-top: 2px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 52px;
+    font: inherit;
+    font-size: 0.62rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-mark {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: hsla(215, 100%, 62%, 1);
+    color: white;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.details {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px 6px;
+    overflow: auto;
+}
+
+.heading,
+.heading-button {
+    display: block;
+    margin: 0 0 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: hsla(225, 12%, 52%, 1);
+    font: inherit;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.heading-button {
+    color: hsla(215, 100%, 45%, 1);
+    cursor: pointer;
+}
+
+.connection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 58px;
+    height: 52px;
+    margin-bottom: 12px;
+    border: 1px solid hsla(215, 90%, 78%, 1);
+    border-radius: 8px;
+    background: hsla(215, 100%, 98%, 1);
+    color: hsla(215, 100%, 55%, 1);
+    font: inherit;
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.usb {
+    width: 14px;
+    height: 18px;
+    background:
+        linear-gradient(#4c97ff, #4c97ff) 2px 0 / 2px 6px no-repeat,
+        linear-gradient(#4c97ff, #4c97ff) 9px 0 / 2px 6px no-repeat,
+        linear-gradient(#4c97ff, #4c97ff) 1px 5px / 12px 4px no-repeat,
+        linear-gradient(#4c97ff, #4c97ff) 5px 9px / 4px 9px no-repeat;
+}
+
+.mode-switch {
+    display: flex;
+    width: 100%;
+    max-width: 168px;
+    padding: 2px;
+    border: 1px solid hsla(215, 70%, 88%, 1);
+    border-radius: 8px;
+    background: hsla(215, 100%, 98%, 1);
+}
+
+.mode-on,
+.mode-off {
+    flex: 1;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 8px;
+    background: transparent;
+    font: inherit;
+    font-size: 0.68rem;
+    cursor: pointer;
+}
+
+.mode-on {
+    border-color: hsla(215, 90%, 72%, 1);
+    background: white;
+    color: hsla(215, 100%, 55%, 1);
+    font-weight: 600;
+}
+
+.mode-off {
+    color: hsla(215, 50%, 72%, 1);
+}
+
+.prepare {
+    margin-top: 12px;
+    border: 0;
+    background: transparent;
+    color: hsla(215, 80%, 45%, 1);
+    font: inherit;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    border: 1px solid hsla(215, 90%, 78%, 1);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: hsla(215, 100%, 98%, 1);
+    color: hsla(215, 100%, 45%, 1);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.footer-status {
+    max-width: 46%;
+    overflow: hidden;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.footer:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.selector {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    background: white;
+}
+
+.selector > * {
+    flex: 1;
+    min-height: 0;
+}

@@ -758,7 +758,7 @@ const xmlClose = '</xml>';
  * @returns {string} - a ScratchBlocks-style XML document for the contents of the toolbox.
  */
 const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categoriesXML = [],
-    costumeName = '', backdropName = '', soundName = '', colors = defaultColors) {
+    costumeName = '', backdropName = '', soundName = '', colors = defaultColors, deviceMode = false) {
     isStage = isInitialSetup || isStage;
     const gap = [categorySeparator];
 
@@ -776,7 +776,8 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         }
         // return `undefined`
     };
-    const motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
+    const builtInMotion = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
+    const motionXML = isStage ? '' : builtInMotion;
     const looksXML = moveCategory('looks') ||
         looks(isInitialSetup, isStage, targetId, costumeName, backdropName, colors.looks);
     const soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName, colors.sounds);
@@ -787,9 +788,24 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId, colors.data);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId, colors.more);
 
+    if (deviceMode) {
+        const deviceCategory = categoriesXML.find(category => category.id === 'arduinoUno');
+        const deviceToolbox = [
+            xmlOpen,
+            deviceCategory ? deviceCategory.xml : '', gap,
+            controlXML, gap,
+            operatorsXML, gap,
+            variablesXML,
+            xmlClose
+        ];
+        return deviceToolbox.join('\n');
+    }
+
     const everything = [
-        xmlOpen,
-        motionXML, gap,
+        xmlOpen
+    ];
+    if (motionXML) everything.push(motionXML, gap);
+    everything.push(
         looksXML, gap,
         soundXML, gap,
         eventsXML, gap,
@@ -798,7 +814,7 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         operatorsXML, gap,
         variablesXML, gap,
         myBlocksXML
-    ];
+    );
 
     for (const extensionCategory of categoriesXML) {
         everything.push(gap, extensionCategory.xml);

@@ -210,15 +210,38 @@
 
     /* this will only ever be as wide as the stage */
     flex-basis: 0;
+    min-width: 0;
+}
+
+/*
+    Lock the column to the canvas. The device panel must not stretch it,
+    or the half-size stage sits in a wider blue box.
+    Width = stage content + 2 * border (0.0625rem) + horizontal padding.
+*/
+.stage-and-target-wrapper.small {
+    flex-basis: calc(240px + 0.125rem + ($space * 2));
+    width: calc(240px + 0.125rem + ($space * 2));
+}
+
+.stage-and-target-wrapper.large {
+    flex-basis: calc(480px + 0.125rem + ($space * 2));
+    width: calc(480px + 0.125rem + ($space * 2));
+}
+
+.stage-and-target-wrapper.largeConstrained {
+    flex-basis: calc(408px + 0.125rem + ($space * 2));
+    width: calc(408px + 0.125rem + ($space * 2));
 }
 
 .target-wrapper {
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
     flex-basis: 0;
 
     padding-top: $space;
     min-height: 0; /* this makes it work in Firefox */
+    min-width: 0;
 
     /*
         For making the sprite-selector a scrollable pane

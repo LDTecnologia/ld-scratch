@@ -10,6 +10,7 @@ import {STAGE_DISPLAY_SIZES} from '../../lib/layout-constants';
 import {isRtl} from 'scratch-l10n';
 
 import styles from './sprite-selector.css';
+import {DEVICE_NAME} from '../../lib/arduino-device';
 
 import fileUploadIcon from '../action-menu/icon--file-upload.svg';
 import paintIcon from '../action-menu/icon--paint.svg';
@@ -103,7 +104,9 @@ const SpriteSelectorComponent = function (props) {
             <SpriteList
                 editingTarget={editingTarget}
                 hoveredTarget={hoveredTarget}
-                items={Object.keys(sprites).map(id => sprites[id])}
+                items={Object.keys(sprites)
+                    .filter(id => sprites[id].name !== DEVICE_NAME)
+                    .map(id => sprites[id])}
                 raised={raised}
                 selectedId={selectedId}
                 onDeleteSprite={onDeleteSprite}

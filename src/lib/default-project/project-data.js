@@ -2,10 +2,40 @@ import {defineMessages} from 'react-intl';
 import sharedMessages from '../shared-messages';
 
 let messages = defineMessages({
-    meow: {
-        defaultMessage: 'Meow',
-        description: 'Name for the meow sound',
-        id: 'gui.defaultProject.meow'
+    robot: {
+        defaultMessage: 'Robô',
+        description: 'Name for the default robot sprite',
+        id: 'gui.defaultProject.robot'
+    },
+    costumeWave: {
+        defaultMessage: 'Acenando',
+        description: 'Name for the waving robot costume',
+        id: 'gui.defaultProject.costumeWave'
+    },
+    costumePoint: {
+        defaultMessage: 'Apontando',
+        description: 'Name for the pointing robot costume',
+        id: 'gui.defaultProject.costumePoint'
+    },
+    costumeThink: {
+        defaultMessage: 'Pensando',
+        description: 'Name for the thinking robot costume',
+        id: 'gui.defaultProject.costumeThink'
+    },
+    costumeThumb: {
+        defaultMessage: 'Legal',
+        description: 'Name for the thumbs-up robot costume',
+        id: 'gui.defaultProject.costumeThumb'
+    },
+    costumeRun: {
+        defaultMessage: 'Correndo',
+        description: 'Name for the running robot costume',
+        id: 'gui.defaultProject.costumeRun'
+    },
+    costumeJump: {
+        defaultMessage: 'Pulando',
+        description: 'Name for the jumping robot costume',
+        id: 'gui.defaultProject.costumeJump'
     },
     variable: {
         defaultMessage: 'my variable',
@@ -66,7 +96,7 @@ const projectData = translateFunction => {
             },
             {
                 isStage: false,
-                name: translator(messages.sprite, {index: 1}),
+                name: translator(messages.robot),
                 variables: {},
                 lists: {},
                 broadcasts: {},
@@ -74,35 +104,61 @@ const projectData = translateFunction => {
                 currentCostume: 0,
                 costumes: [
                     {
-                        assetId: 'bcf454acf82e4504149f7ffe07081dbc',
-                        name: translator(messages.costume, {index: 1}),
+                        assetId: '6ad294e1ed528ba7ba08e7558e06ffb7',
+                        name: translator(messages.costumeWave),
                         bitmapResolution: 1,
-                        md5ext: 'bcf454acf82e4504149f7ffe07081dbc.svg',
-                        dataFormat: 'svg',
-                        rotationCenterX: 48,
-                        rotationCenterY: 50
+                        md5ext: '6ad294e1ed528ba7ba08e7558e06ffb7.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 91,
+                        rotationCenterY: 110
                     },
                     {
-                        assetId: '0fb9be3e8397c983338cb71dc84d0b25',
-                        name: translator(messages.costume, {index: 2}),
+                        assetId: '3cd42d0b91eaeaf517054b86a22d0621',
+                        name: translator(messages.costumePoint),
                         bitmapResolution: 1,
-                        md5ext: '0fb9be3e8397c983338cb71dc84d0b25.svg',
-                        dataFormat: 'svg',
-                        rotationCenterX: 46,
-                        rotationCenterY: 53
-                    }
-                ],
-                sounds: [
+                        md5ext: '3cd42d0b91eaeaf517054b86a22d0621.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 96,
+                        rotationCenterY: 110
+                    },
                     {
-                        assetId: '83c36d806dc92327b9e7049a565c6bff',
-                        name: translator(messages.meow),
-                        dataFormat: 'wav',
-                        format: '',
-                        rate: 22050,
-                        sampleCount: 18688,
-                        md5ext: '83c36d806dc92327b9e7049a565c6bff.wav'
+                        assetId: 'fc57e8bc41988fd1c4034f33e5f620e7',
+                        name: translator(messages.costumeThink),
+                        bitmapResolution: 1,
+                        md5ext: 'fc57e8bc41988fd1c4034f33e5f620e7.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 73,
+                        rotationCenterY: 110
+                    },
+                    {
+                        assetId: '7bb8c3bbddbe9d547af869b33e4950bf',
+                        name: translator(messages.costumeThumb),
+                        bitmapResolution: 1,
+                        md5ext: '7bb8c3bbddbe9d547af869b33e4950bf.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 85,
+                        rotationCenterY: 110
+                    },
+                    {
+                        assetId: '4773b425831b7b6286415fd11b3c4e7a',
+                        name: translator(messages.costumeRun),
+                        bitmapResolution: 1,
+                        md5ext: '4773b425831b7b6286415fd11b3c4e7a.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 91,
+                        rotationCenterY: 110
+                    },
+                    {
+                        assetId: '884994f935a614bdf06c461fefdbc3ad',
+                        name: translator(messages.costumeJump),
+                        bitmapResolution: 1,
+                        md5ext: '884994f935a614bdf06c461fefdbc3ad.png',
+                        dataFormat: 'png',
+                        rotationCenterX: 103,
+                        rotationCenterY: 110
                     }
                 ],
+                sounds: [],
                 volume: 100,
                 visible: true,
                 x: 0,
@@ -110,7 +166,7 @@ const projectData = translateFunction => {
                 size: 100,
                 direction: 90,
                 draggable: false,
-                rotationStyle: 'all around'
+                rotationStyle: 'left-right'
             }
         ],
         meta: {

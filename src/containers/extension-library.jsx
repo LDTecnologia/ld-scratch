@@ -14,11 +14,6 @@ const messages = defineMessages({
         defaultMessage: 'Choose an Extension',
         description: 'Heading for the extension library',
         id: 'gui.extensionLibrary.chooseAnExtension'
-    },
-    extensionUrl: {
-        defaultMessage: 'Enter the URL of the extension',
-        description: 'Prompt for unoffical extension url',
-        id: 'gui.extensionLibrary.extensionUrl'
     }
 });
 
@@ -31,19 +26,15 @@ class ExtensionLibrary extends React.PureComponent {
     }
     handleItemSelect (item) {
         const id = item.extensionId;
-        let url = item.extensionURL ? item.extensionURL : id;
-        if (!item.disabled && !id) {
-            // eslint-disable-next-line no-alert
-            url = prompt(this.props.intl.formatMessage(messages.extensionUrl));
+        if (!id || item.disabled || item.extensionURL) {
+            return;
         }
-        if (id && !item.disabled) {
-            if (this.props.vm.extensionManager.isExtensionLoaded(url)) {
+        if (this.props.vm.extensionManager.isExtensionLoaded(id)) {
+            this.props.onCategorySelected(id);
+        } else {
+            this.props.vm.extensionManager.loadExtensionURL(id).then(() => {
                 this.props.onCategorySelected(id);
-            } else {
-                this.props.vm.extensionManager.loadExtensionURL(url).then(() => {
-                    this.props.onCategorySelected(id);
-                });
-            }
+            });
         }
     }
     render () {

@@ -1,5 +1,6 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
+import {ARDUINO_PUBLISHED} from '../../arduino-device';
 
 import musicIconURL from './music/music.png';
 import musicInsetIconURL from './music/music-small.svg';
@@ -18,6 +19,9 @@ import translateInsetIconURL from './translate/translate-small.png';
 
 import makeymakeyIconURL from './makeymakey/makeymakey.png';
 import makeymakeyInsetIconURL from './makeymakey/makeymakey-small.svg';
+
+import arduinoUnoIconURL from './arduino/arduino-uno.png';
+import arduinoUnoInsetIconURL from './arduino/arduino-uno-small.svg';
 
 import microbitIconURL from './microbit/microbit.png';
 import microbitInsetIconURL from './microbit/microbit-small.svg';
@@ -46,7 +50,7 @@ import gdxforInsetIconURL from './gdxfor/gdxfor-small.svg';
 import gdxforConnectionIconURL from './gdxfor/gdxfor-illustration.svg';
 import gdxforConnectionSmallIconURL from './gdxfor/gdxfor-small.svg';
 
-export default [
+const extensions = [
     {
         name: (
             <FormattedMessage
@@ -162,6 +166,20 @@ export default [
                 defaultMessage="Make anything into a key."
                 description="Description for the 'Makey Makey' extension"
                 id="gui.extension.makeymakey.description"
+            />
+        ),
+        featured: true
+    },
+    {
+        name: 'Arduino Uno',
+        extensionId: 'arduinoUno',
+        iconURL: arduinoUnoIconURL,
+        insetIconURL: arduinoUnoInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Controle os pinos do Arduino Uno pela USB ou grave um programa na placa."
+                description="Description for the Arduino Uno extension"
+                id="gui.extension.arduinoUno.description"
             />
         ),
         featured: true
@@ -319,3 +337,7 @@ export default [
         helpLink: 'https://scratch.mit.edu/vernier'
     }
 ];
+
+export default ARDUINO_PUBLISHED ?
+    extensions :
+    extensions.filter(extension => extension.extensionId !== 'arduinoUno');

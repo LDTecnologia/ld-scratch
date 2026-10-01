@@ -99,6 +99,137 @@ $header-height: calc($stage-menu-height - 2px);
     bottom: 0.75rem;
 }
 
+.tile {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    align-items: stretch;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 1px;
+    border-radius: 8px;
+    border-color: hsla(215, 80%, 86%, 1);
+    background: white;
+}
+
+.backdrop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-content: start;
+    justify-content: start;
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    margin: 0;
+    padding: 10px 12px 64px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.backdrop-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 6px 4px 5px;
+    border: 1px solid hsla(215, 80%, 86%, 1);
+    border-radius: 8px;
+    background: white;
+    color: hsla(215, 100%, 45%, 1);
+    font: inherit;
+    cursor: pointer;
+}
+
+.backdrop-on {
+    border-color: hsla(215, 90%, 72%, 1);
+}
+
+.backdrop-thumb {
+    width: 100%;
+    height: 42px;
+    object-fit: contain;
+}
+
+.backdrop-delete {
+    position: absolute;
+    top: -0.45rem;
+    z-index: 2;
+    transform: scale(0.72);
+}
+
+[dir="ltr"] .backdrop-delete {
+    right: -0.35rem;
+}
+
+[dir="rtl"] .backdrop-delete {
+    left: -0.35rem;
+}
+
+.backdrop-name {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    overflow: hidden;
+    font-size: 0.62rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tile .header {
+    height: 1.35rem;
+    background: transparent;
+    border-bottom: 0;
+}
+
+.tile.is-selected,
+.tile:hover {
+    border-color: hsla(215, 90%, 72%, 1);
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.tile.is-selected .header,
+.tile:hover .header {
+    background: transparent;
+}
+
+.tile.is-selected .header-title,
+.tile .header-title {
+    color: hsla(215, 100%, 55%, 1);
+    font-size: 0.62rem;
+    font-weight: 600;
+}
+
+.tile .costume-canvas {
+    max-width: 52px;
+    max-height: 40px;
+    box-shadow: none;
+}
+
+.tile .add-button {
+    position: absolute;
+    bottom: 12px;
+    margin: 0;
+}
+
+[dir="ltr"] .tile .add-button {
+    right: 12px;
+    left: auto;
+}
+
+[dir="rtl"] .tile .add-button {
+    left: 12px;
+    right: auto;
+}
+
 .raised, .raised .header {
     background-color: $drop-highlight;
     transition: all 0.25s ease;

@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -44,6 +45,7 @@ const TargetPane = ({
     stage,
     stageSize,
     sprites,
+    view,
     vm,
     ...componentProps
 }) => (
@@ -52,41 +54,50 @@ const TargetPane = ({
         {...componentProps}
     >
 
-        <SpriteSelectorComponent
-            editingTarget={editingTarget}
-            hoveredTarget={hoveredTarget}
-            raised={raiseSprites}
-            selectedId={editingTarget}
-            spriteFileInput={fileInputRef}
-            sprites={sprites}
-            stageSize={stageSize}
-            onChangeSpriteDirection={onChangeSpriteDirection}
-            onChangeSpriteName={onChangeSpriteName}
-            onChangeSpriteRotationStyle={onChangeSpriteRotationStyle}
-            onChangeSpriteSize={onChangeSpriteSize}
-            onChangeSpriteVisibility={onChangeSpriteVisibility}
-            onChangeSpriteX={onChangeSpriteX}
-            onChangeSpriteY={onChangeSpriteY}
-            onDeleteSprite={onDeleteSprite}
-            onDrop={onDrop}
-            onDuplicateSprite={onDuplicateSprite}
-            onExportSprite={onExportSprite}
-            onFileUploadClick={onFileUploadClick}
-            onNewSpriteClick={onNewSpriteClick}
-            onPaintSpriteClick={onPaintSpriteClick}
-            onSelectSprite={onSelectSprite}
-            onSpriteUpload={onSpriteUpload}
-            onSurpriseSpriteClick={onSurpriseSpriteClick}
-        />
-        <div className={styles.stageSelectorWrapper}>
+        {view === 'stage' ? null : (
+            <SpriteSelectorComponent
+                editingTarget={editingTarget}
+                hoveredTarget={hoveredTarget}
+                raised={raiseSprites}
+                selectedId={editingTarget}
+                spriteFileInput={fileInputRef}
+                sprites={sprites}
+                stageSize={stageSize}
+                onChangeSpriteDirection={onChangeSpriteDirection}
+                onChangeSpriteName={onChangeSpriteName}
+                onChangeSpriteRotationStyle={onChangeSpriteRotationStyle}
+                onChangeSpriteSize={onChangeSpriteSize}
+                onChangeSpriteVisibility={onChangeSpriteVisibility}
+                onChangeSpriteX={onChangeSpriteX}
+                onChangeSpriteY={onChangeSpriteY}
+                onDeleteSprite={onDeleteSprite}
+                onDrop={onDrop}
+                onDuplicateSprite={onDuplicateSprite}
+                onExportSprite={onExportSprite}
+                onFileUploadClick={onFileUploadClick}
+                onNewSpriteClick={onNewSpriteClick}
+                onPaintSpriteClick={onPaintSpriteClick}
+                onSelectSprite={onSelectSprite}
+                onSpriteUpload={onSpriteUpload}
+                onSurpriseSpriteClick={onSurpriseSpriteClick}
+            />
+        )}
+        {view === 'sprites' ? null : (
+            <div className={classNames(styles.stageSelectorWrapper, {
+                [styles.stageOnly]: view === 'stage'
+            })}
+            >
             {stage.id && <StageSelector
                 asset={
                     stage.costume &&
                     stage.costume.asset
                 }
                 backdropCount={stage.costumeCount}
+                costumes={stage.costumes}
+                currentCostume={stage.currentCostume}
                 id={stage.id}
                 selected={stage.id === editingTarget}
+                tile={view === 'stage'}
                 onSelect={onSelectSprite}
             />}
             <div>
@@ -99,6 +110,7 @@ const TargetPane = ({
                 ) : null}
             </div>
         </div>
+        )}
     </div>
 );
 
@@ -158,7 +170,12 @@ TargetPane.propTypes = {
     sprites: PropTypes.objectOf(spriteShape),
     stage: spriteShape,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
+    view: PropTypes.oneOf(['both', 'sprites', 'stage']),
     vm: PropTypes.instanceOf(VM)
+};
+
+TargetPane.defaultProps = {
+    view: 'both'
 };
 
 export default TargetPane;

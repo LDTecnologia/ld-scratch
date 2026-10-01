@@ -52,6 +52,18 @@ describe('detectLocale', () => {
         expect(detectLocale(supportedLocales)).toEqual('en');
     });
 
+    test('uses Brazilian Portuguese when the browser is Portugal Portuguese', () => {
+        Object.defineProperty(window.location,
+            'search',
+            {value: ''}
+        );
+        Object.defineProperty(window.navigator,
+            'language',
+            {value: 'pt-PT'}
+        );
+        expect(detectLocale(['en', 'pt', 'pt-br'])).toEqual('pt-br');
+    });
+
     test('uses navigator language property for default if supported', () => {
         Object.defineProperty(window.navigator,
             'language',

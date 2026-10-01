@@ -13,6 +13,18 @@
     flex-shrink: 0;
 }
 
+.stage-selector-wrapper.stage-only {
+    flex-direction: column;
+    flex-basis: auto;
+    flex-grow: 1;
+    align-items: stretch;
+    min-height: 0;
+    height: 100%;
+    padding: 10px 12px 12px;
+    background: white;
+    box-sizing: border-box;
+}
+
 [dir="ltr"] .stage-selector-wrapper {
     margin-left: calc($space / 2);
 }

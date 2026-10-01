@@ -11,6 +11,15 @@ import queryString from 'query-string';
  * @param {Array.string} supportedLocales An array of supported locale codes.
  * @return {string} the preferred locale
  */
+// Portugal Portuguese (`pt`, `pt-PT`) is a separate Scratch locale from Brazilian
+// Portuguese. This editor is for Brazil, so any Portuguese browser or URL uses pt-br.
+const brazilianPortuguese = (locale, supportedLocales) => {
+    if ((locale === 'pt' || locale === 'pt-pt') && supportedLocales.includes('pt-br')) {
+        return 'pt-br';
+    }
+    return locale;
+};
+
 const detectLocale = supportedLocales => {
     let locale = 'en'; // default
     let browserLocale = window.navigator.userLanguage || window.navigator.language;
@@ -24,6 +33,7 @@ const detectLocale = supportedLocales => {
             locale = browserLocale;
         }
     }
+    locale = brazilianPortuguese(locale, supportedLocales);
 
     const queryParams = queryString.parse(location.search);
     // Flatten potential arrays and remove falsy values
@@ -34,7 +44,7 @@ const detectLocale = supportedLocales => {
 
     const urlLocale = potentialLocales[0].toLowerCase();
     if (supportedLocales.includes(urlLocale)) {
-        return urlLocale;
+        return brazilianPortuguese(urlLocale, supportedLocales);
     }
 
     return locale;

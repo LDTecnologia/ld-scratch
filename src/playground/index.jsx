@@ -16,6 +16,7 @@ import styles from './index.css';
 const appTarget = document.createElement('div');
 appTarget.className = styles.app;
 document.body.appendChild(appTarget);
+document.title = 'Aluno Maker';
 
 if (supportedBrowser()) {
     // require needed here to avoid importing unsupported browser-crashing code
