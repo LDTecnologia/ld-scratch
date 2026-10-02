@@ -224,8 +224,10 @@
 }
 
 .stage-and-target-wrapper.large {
-    flex-basis: calc(480px + 0.125rem + ($space * 2));
-    width: calc(480px + 0.125rem + ($space * 2));
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: max-content;
 }
 
 .stage-and-target-wrapper.largeConstrained {

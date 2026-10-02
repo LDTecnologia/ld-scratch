@@ -41,7 +41,11 @@ const resolveStageSize = (stageSizeMode, isFullSize) => {
  * @param {boolean} isFullScreen - true if full-screen mode is enabled.
  * @return {StageDimensions} - an object describing the dimensions of the stage.
  */
-const getStageDimensions = (stageSize, isFullScreen) => {
+const getStageDimensions = (stageSize, isFullScreen, viewport) => {
+    const view = viewport || (typeof window === 'undefined' ? null : {
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
     const stageDimensions = {
         heightDefault: layout.standardStageHeight,
         widthDefault: layout.standardStageWidth,
@@ -63,6 +67,21 @@ const getStageDimensions = (stageSize, isFullScreen) => {
         }
 
         stageDimensions.scale = stageDimensions.width / stageDimensions.widthDefault;
+    } else if (stageSize === STAGE_DISPLAY_SIZES.large && view) {
+        // On a wide window the scripts area was a large empty panel. Grow the
+        // stage until the code column still has room to work.
+        const blocksMin = 640;
+        const spritePaneMin = 168;
+        const verticalChrome = 48 + 44 + spritePaneMin;
+        const maxByWidth = view.width - blocksMin - 24;
+        const maxByHeight = (view.height - verticalChrome) * (4 / 3);
+        const width = Math.round(Math.max(
+            stageDimensions.widthDefault,
+            Math.min(720, maxByWidth, maxByHeight)
+        ));
+        stageDimensions.scale = width / stageDimensions.widthDefault;
+        stageDimensions.width = width;
+        stageDimensions.height = stageDimensions.scale * stageDimensions.heightDefault;
     } else {
         stageDimensions.scale = STAGE_DISPLAY_SCALES[stageSize];
         stageDimensions.height = stageDimensions.scale * stageDimensions.heightDefault;

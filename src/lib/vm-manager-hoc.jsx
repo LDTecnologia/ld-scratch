@@ -25,7 +25,7 @@ const vmManagerHOC = function (WrappedComponent) {
             super(props);
             bindAll(this, [
                 'loadProject',
-                'ensureMakeyMakey'
+                'ensureBuiltinExtensions'
             ]);
         }
         componentDidMount () {
@@ -52,16 +52,18 @@ const vmManagerHOC = function (WrappedComponent) {
                 this.props.vm.start();
             }
         }
-        ensureMakeyMakey () {
-            const extensionId = 'makeymakey';
-            if (this.props.vm.extensionManager.isExtensionLoaded(extensionId)) {
-                return Promise.resolve();
-            }
-            return this.props.vm.extensionManager.loadExtensionURL(extensionId);
+        ensureBuiltinExtensions () {
+            const extensionIds = ['pen', 'makeymakey'];
+            return extensionIds.reduce((chain, extensionId) => chain.then(() => {
+                if (this.props.vm.extensionManager.isExtensionLoaded(extensionId)) {
+                    return Promise.resolve();
+                }
+                return this.props.vm.extensionManager.loadExtensionURL(extensionId);
+            }), Promise.resolve());
         }
         loadProject () {
             return this.props.vm.loadProject(this.props.projectData)
-                .then(() => this.ensureMakeyMakey())
+                .then(() => this.ensureBuiltinExtensions())
                 .then(() => {
                     this.props.onLoadedProject(this.props.loadingState, this.props.canSave);
                     // Wrap in a setTimeout because skin loading in

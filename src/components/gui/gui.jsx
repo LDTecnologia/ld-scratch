@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
+import {FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
 import MediaQuery from 'react-responsive';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -32,23 +32,14 @@ import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
-import {resolveStageSize} from '../../lib/screen-utils';
+import {getStageDimensions, resolveStageSize} from '../../lib/screen-utils';
 import {themeMap} from '../../lib/themes';
 
 import styles from './gui.css';
-import addExtensionIcon from './icon--extensions.svg';
 import codeIcon from './icon--code.svg';
 import costumesIcon from './icon--costumes.svg';
 import soundsIcon from './icon--sounds.svg';
 import DebugModal from '../debug-modal/debug-modal.jsx';
-
-const messages = defineMessages({
-    addExtension: {
-        id: 'gui.gui.addExtension',
-        description: 'Button to add an extension in the target pane',
-        defaultMessage: 'Add Extension'
-    }
-});
 
 // Cache this value to only retrieve it once the first time.
 // Assume that it doesn't change for a session.
@@ -85,7 +76,7 @@ const GUIComponent = props => {
         costumesTabVisible,
         debugModalVisible,
         enableCommunity,
-        intl,
+        intl, // kept out of the DOM; injectIntl still provides it
         isCreating,
         isFullScreen,
         isPlayerOnly,
@@ -129,6 +120,21 @@ const GUIComponent = props => {
         vm,
         ...componentProps
     } = omit(props, 'dispatch');
+    void intl;
+
+    const [viewport, setViewport] = React.useState({
+        width: typeof window === 'undefined' ? 1280 : window.innerWidth,
+        height: typeof window === 'undefined' ? 800 : window.innerHeight
+    });
+    React.useEffect(() => {
+        const onResize = () => setViewport({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
     if (children) {
         return <Box {...componentProps}>{children}</Box>;
     }
@@ -148,6 +154,7 @@ const GUIComponent = props => {
 
     return (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize => {
         const stageSize = resolveStageSize(stageSizeMode, isFullSize);
+        const stageDimensions = getStageDimensions(stageSize, isFullScreen, viewport);
 
         return isPlayerOnly ? (
             <StageWrapper
@@ -326,19 +333,6 @@ const GUIComponent = props => {
                                             vm={vm}
                                         />
                                     </Box>
-                                    <Box className={styles.extensionButtonContainer}>
-                                        <button
-                                            className={styles.extensionButton}
-                                            title={intl.formatMessage(messages.addExtension)}
-                                            onClick={onExtensionButtonClick}
-                                        >
-                                            <img
-                                                className={styles.extensionButtonIcon}
-                                                draggable={false}
-                                                src={addExtensionIcon}
-                                            />
-                                        </button>
-                                    </Box>
                                     <Box className={styles.watermark}>
                                         <Watermark />
                                     </Box>
@@ -355,7 +349,13 @@ const GUIComponent = props => {
                             ) : null}
                         </Box>
 
-                        <Box className={classNames(styles.stageAndTargetWrapper, styles[stageSize])}>
+                        <Box
+                            className={classNames(styles.stageAndTargetWrapper, styles[stageSize])}
+                            style={stageSize === 'small' ? null : {
+                                width: stageDimensions.width + 18,
+                                flexBasis: stageDimensions.width + 18
+                            }}
+                        >
                             <StageWrapper
                                 isFullScreen={isFullScreen}
                                 isRendererSupported={isRendererSupported}
