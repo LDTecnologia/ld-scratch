@@ -12,8 +12,8 @@ import Renderer from 'scratch-render';
 
 import Blocks from '../../containers/blocks.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
+import TargetPane from '../../containers/target-pane.jsx';
 import SoundTab from '../../containers/sound-tab.jsx';
-import StageDevicePane from '../stage-device-pane/stage-device-pane.jsx';
 import StageWrapper from '../../containers/stage-wrapper.jsx';
 import Loader from '../loader/loader.jsx';
 import Box from '../box/box.jsx';
@@ -364,10 +364,9 @@ const GUIComponent = props => {
                                 vm={vm}
                             />
                             <Box className={styles.targetWrapper}>
-                                <StageDevicePane
+                                <TargetPane
                                     stageSize={stageSize}
                                     vm={vm}
-                                    onAddDevice={onExtensionButtonClick}
                                 />
                             </Box>
                         </Box>
